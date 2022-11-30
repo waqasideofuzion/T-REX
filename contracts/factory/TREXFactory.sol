@@ -77,6 +77,7 @@ import '../proxy/ModularComplianceProxy.sol';
 import './ITREXFactory.sol';
 
 
+
 contract TREXFactory is ITREXFactory, Ownable {
 
     /// the address of the implementation authority contract used in the tokens deployed by the factory

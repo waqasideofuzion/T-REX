@@ -1,11 +1,13 @@
 const { deployIdentityProxy } = require('./helpers/proxy');
 const EVMRevert = require('./helpers/VMExceptionRevert');
 require('chai').use(require('chai-as-promised')).should();
+const onchainid = require('@onchain-id/solidity');
+
 const {
   ClaimTopicsRegistry,
-  CountryAllowModule,
+  // CountryAllowModule,
   ModularCompliance,
-  CountryRestrictModule,
+  // CountryRestrictModule,
   IdentityRegistry,
   IdentityRegistryStorage,
   Implementation,
@@ -91,8 +93,8 @@ contract('Factory', (accounts) => {
     await user2Contract.addClaim(7, 1, claimIssuerContract.address, signature2, hexedData2, '', { from: user2 }).should.be.fulfilled;
 
     // deploy modules
-    crModule = await CountryRestrictModule.new({ from: tokeny });
-    caModule = await CountryAllowModule.new({ from: tokeny });
+    // crModule = await CountryRestrictModule.new({ from: tokeny });
+    // caModule = await CountryAllowModule.new({ from: tokeny });
   });
 
   it('Should deploy a token and load contracts', async () => {
@@ -143,8 +145,8 @@ contract('Factory', (accounts) => {
     (await token.isAgent(agent)).toString().should.equal('true');
     (await identityRegistry.isAgent(tokeny)).toString().should.equal('true');
     (await identityRegistry.isAgent(agent)).toString().should.equal('true');
-    (await modularCompliance.isModuleBound(crModule.address)).toString().should.equal('false');
-    (await modularCompliance.isModuleBound(caModule.address)).toString().should.equal('false');
+    // (await modularCompliance.isModuleBound(crModule.address)).toString().should.equal('false');
+    // (await modularCompliance.isModuleBound(caModule.address)).toString().should.equal('false');
     (await trustedIssuersRegistry.hasClaimTopic(claimIssuerContract.address, 1)).should.equal(false);
     (await trustedIssuersRegistry.hasClaimTopic(claimIssuerContract.address, 7)).should.equal(true);
     (await trustedIssuersRegistry.isTrustedIssuer(claimIssuerContract.address)).should.equal(true);
@@ -155,10 +157,10 @@ contract('Factory', (accounts) => {
   });
   it('Should deploy a token with compliance modules properly set', async () => {
     // compliance modules settings
-    const callData1 = caModule.contract.methods.addAllowedCountry(1).encodeABI();
-    const callData2 = caModule.contract.methods.addAllowedCountry(2).encodeABI();
-    const callData3 = crModule.contract.methods.addCountryRestriction(3).encodeABI();
-    const callData4 = crModule.contract.methods.addCountryRestriction(4).encodeABI();
+    // const callData1 = caModule.contract.methods.addAllowedCountry(1).encodeABI();
+    // const callData2 = caModule.contract.methods.addAllowedCountry(2).encodeABI();
+    // const callData3 = crModule.contract.methods.addCountryRestriction(3).encodeABI();
+    // const callData4 = crModule.contract.methods.addCountryRestriction(4).encodeABI();
 
     // token details
     tokenDetails = {
@@ -170,8 +172,10 @@ contract('Factory', (accounts) => {
       ONCHAINID: '0x0000000000000000000000000000000000000042',
       irAgents: [tokeny, agent],
       tokenAgents: [tokeny, agent],
-      complianceModules: [caModule.address, caModule.address, crModule.address, crModule.address],
-      complianceSettings: [callData1, callData2, callData3, callData4],
+      // complianceModules: [caModule.address, caModule.address, crModule.address, crModule.address],
+      complianceModules: [],
+      // complianceSettings: [callData1, callData2, callData3, callData4],
+      complianceSettings: [],
     };
 
     // claim details
@@ -195,12 +199,12 @@ contract('Factory', (accounts) => {
     identityRegistryStorage = await IdentityRegistryStorage.at(identityRegistryStorageAddress);
 
     // test that modules are set properly
-    (await crModule.isComplianceBound(modularCompliance.address)).toString().should.equal('true');
-    (await crModule.isCountryRestricted(modularCompliance.address, 3)).toString().should.equal('true');
-    (await crModule.isCountryRestricted(modularCompliance.address, 4)).toString().should.equal('true');
-    (await caModule.isComplianceBound(modularCompliance.address)).toString().should.equal('true');
-    (await caModule.isCountryAllowed(modularCompliance.address, 1)).toString().should.equal('true');
-    (await caModule.isCountryAllowed(modularCompliance.address, 2)).toString().should.equal('true');
+    // (await crModule.isComplianceBound(modularCompliance.address)).toString().should.equal('true');
+    // (await crModule.isCountryRestricted(modularCompliance.address, 3)).toString().should.equal('true');
+    // (await crModule.isCountryRestricted(modularCompliance.address, 4)).toString().should.equal('true');
+    // (await caModule.isComplianceBound(modularCompliance.address)).toString().should.equal('true');
+    // (await caModule.isCountryAllowed(modularCompliance.address, 1)).toString().should.equal('true');
+    // (await caModule.isCountryAllowed(modularCompliance.address, 2)).toString().should.equal('true');
   });
   it('Should deploy a token with an existing IRS', async () => {
     // pre-deploy IRS
