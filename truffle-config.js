@@ -2,9 +2,6 @@ const dotenv = require("dotenv");
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 require('dotenv').config()
 
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
-
 const solcStable = {
   version: '^0.8.14',
   settings: {
@@ -28,14 +25,28 @@ module.exports = {
         providerOrUrl: process.env.INFURA_API_KEY,
       }),
       network_id: 43113,
-      networkCheckTimeout: 1000000000000,
-      timeoutBlocks: 20000000,
-      pollingInterval: 10000000000,
-      addressIndex: 2,
+      // networkCheckTimeout: 1000000000000000000000,
+      // timeoutBlocks: 2000000,
+      // pollingInterval: 30000,
+      // addressIndex: 2,
       // confirmations: 10,
-      skipDryRun: false
+      // skipDryRun: false
 
 
+    },
+    bsctestnet: {
+      provider: () => new HDWalletProvider({
+        mnemonic: process.env.MNEMONIC,
+        providerOrUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      }),
+      network_id: 97,
+      // gas: 5000000,
+      // gasPrice: 40000000000,
+      confirmations: 1,
+      timeoutBlocks: 400,
+      skipDryRun: false,
+      timeoutBlocks: 90000,
+      networkCheckTimeout: 9000000
     }
   },
 

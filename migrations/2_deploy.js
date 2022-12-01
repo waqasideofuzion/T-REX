@@ -1,5 +1,5 @@
-const  deployIdentityProxy = require('../test/helpers/proxy');
-const  updateJsonFile = require('update-json-file')
+const deployIdentityProxy = require('../test/helpers/proxy');
+const updateJsonFile = require('update-json-file')
 const EVMRevert = require('../test/helpers/VMExceptionRevert');
 require('chai').use(require('chai-as-promised')).should();
 const onchainid = require('@onchain-id/solidity');
@@ -158,6 +158,17 @@ module.exports = async function (deployer, network, accounts) {
 
     // deploy token on Factory
     let deploySuite = await factory.deployTREXSuite('test1', tokenDetails, claimDetails, { from: tokeny });
+
+    console.log("token", token.address);
+
+    const tokenAddress = await factory.getToken('test1');
+    console.log("tokenAddress", tokenAddress);
+    token = await Token.at(tokenAddress);
+    console.log("token proxy", token.address)
+
+    console.log("tokenname", await token.name());
+
+    // (await token.name()).toString().should.equal('TREXDINO');
 
     // console.log(deploySuite);
 
